@@ -1,10 +1,6 @@
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './user.entity';
 
-type TypicalJobCost = {
-  from: string;
-  to: string;
-};
 @Entity()
 export class BusinessDetails {
   @PrimaryGeneratedColumn()
@@ -14,11 +10,7 @@ export class BusinessDetails {
   @Column({ nullable: true })
   businessDescription?: string;
   @Column({ nullable: true })
-  certificatesAndAwards?: string;
-  @Column({ nullable: true })
   photo?: string;
-  @Column('json', { nullable: true })
-  typicalJobCost?: TypicalJobCost;
   @Column({ nullable: true })
   facebook?: string;
   @Column({ nullable: true })

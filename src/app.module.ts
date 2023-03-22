@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { S3Module } from './s3/s3.module';
 
 @Module({
   imports: [
@@ -19,8 +20,9 @@ import { ConfigModule } from '@nestjs/config';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       autoLoadEntities: true,
-      synchronize: Boolean(process.env.DB_SYNCHRONIZE),
+      synchronize: true,
     }),
+    S3Module,
   ],
   controllers: [AppController],
   providers: [AppService],
