@@ -42,7 +42,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:3000',
       'http://localhost:3001',
-      'https://amar-design.vercel.app/',
+      'https://amar-design.vercel.app',
     ],
   });
   app.use(passport.initialize());
