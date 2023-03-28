@@ -1,40 +1,34 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Req,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Post, Body, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthenticatedGuard } from './authenticated.guard';
-import { LoginDTO } from './dto/Login.dto';
-import { LocalAuthGuard } from './local-auth.guard';
+import { FacebookAuthDto } from './dto/facebook.dto';
+import { GoogleAuthDto } from './dto/google.dto';
+import { EmailLoginDto } from './dto/local.dto';
+import { PhoneLoginDto } from './dto/phone.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
-
-  @UseGuards(LocalAuthGuard)
-  @Post('login')
-  async login(@Body() loginDTO: LoginDTO) {
-    return await this.authService.LogIn(loginDTO.email, loginDTO.password);
+  constructor(private readonly authService: AuthService) {}
+  @Post('login-via-email')
+  loginViaEmail(@Body() emailLoginDto: EmailLoginDto) {
+    return this.authService.logInViaEmail(emailLoginDto);
+  }
+  @Post('login-via-phone')
+  loginViaPhone(@Body() phoneLoginDto: PhoneLoginDto) {
+    return this.authService.loginViaPhone(phoneLoginDto);
+  }
+  @Post('auth-via-google')
+  authViaGoogle(@Body() googleAuthDto: GoogleAuthDto) {
+    return this.authService.authViaGoogle(googleAuthDto);
+  }
+  @Post('auth-via-facebook')
+  authViaFacebook(@Body() facebookAuthDto: FacebookAuthDto) {
+    return this.authService.authViaFacebook(facebookAuthDto);
   }
 
-  @UseGuards(AuthenticatedGuard)
-  @Get('check_auth')
-  checkAuth(@Request() req) {
-    return {
-      user: req.user,
-      message: 'Authenticated',
-    };
-  }
-
-  @Get('logout')
-  @UseGuards(AuthenticatedGuard)
-  async logout(@Req() req) {
-    req.session.destroy();
-    return { message: 'Logged Out Successfully', statusCode: 200 };
+  @UseGuards(JwtAuthGuard)
+  @Post('check_auth')
+  checkAuth(@Req() req) {
+    return req.user;
   }
 }

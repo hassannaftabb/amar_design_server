@@ -16,12 +16,21 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   @IsEmail()
-  email: string;
+  email?: string;
 
-  @Column()
-  password: string;
+  @Column({ nullable: true })
+  phone?: string;
+
+  @Column({ nullable: true })
+  password?: string;
+
+  @Column({ nullable: true })
+  googleAccessToken?: string;
+
+  @Column({ nullable: true })
+  fbAccessToken?: string;
 
   @JoinTable()
   @OneToOne(() => BasicInfo, (info) => info.user, {
