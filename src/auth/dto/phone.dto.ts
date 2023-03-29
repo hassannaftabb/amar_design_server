@@ -5,5 +5,5 @@ export class PhoneLoginDto {
   readonly phone: string;
 
   @IsString()
-  readonly password: string;
+  readonly firebaseAccessToken: string;
 }

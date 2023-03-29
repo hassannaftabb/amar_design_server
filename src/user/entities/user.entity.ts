@@ -32,6 +32,9 @@ export class User {
   @Column({ nullable: true })
   fbAccessToken?: string;
 
+  @Column({ nullable: true })
+  firebaseAccessToken?: string;
+
   @JoinTable()
   @OneToOne(() => BasicInfo, (info) => info.user, {
     cascade: true,
@@ -42,7 +45,7 @@ export class User {
   @OneToOne(() => BusinessDetails, (detail) => detail.user, {
     cascade: true,
   })
-  businessDetails: BusinessDetails;
+  businessDetails?: BusinessDetails;
 
   @JoinTable()
   @OneToMany(() => Project, (project) => project.user, {

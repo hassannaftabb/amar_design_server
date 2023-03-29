@@ -55,7 +55,9 @@ export class UserService {
       const userToCreate: any = {
         ...(createUserDto.email && { email: createUserDto.email }),
         ...(createUserDto.phone && { phone: createUserDto.phone }),
-        password: await bcrypt.hash(createUserDto.password, 10),
+        ...(createUserDto.password && {
+          password: await bcrypt.hash(createUserDto.password, 10),
+        }),
         basicInfo: createUserDto.basicInfo,
         ...(createUserDto.businessDetails && {
           businessDetails: {
@@ -69,6 +71,9 @@ export class UserService {
         }),
         ...(createUserDto.facebookAccessToken && {
           facebookAccessToken: createUserDto.facebookAccessToken,
+        }),
+        ...(createUserDto.firebaseAccessToken && {
+          firebaseAccessToken: createUserDto.firebaseAccessToken,
         }),
       };
       const isExistingUser = createUserDto.email

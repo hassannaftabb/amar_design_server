@@ -34,6 +34,10 @@ export class CreateUserDto {
 
   @IsString()
   @IsOptional()
+  readonly firebaseAccessToken?: string;
+
+  @IsString()
+  @IsOptional()
   @IsEnum(ProviderEnum)
   readonly provider?: string;
 
@@ -43,11 +47,9 @@ export class CreateUserDto {
   @Type(() => BasicInfo)
   readonly basicInfo: BasicInfo;
 
-  @IsDefined()
-  @IsObject()
-  @IsNotEmptyObject()
+  @IsOptional()
   @Type(() => BusinessDetails)
-  readonly businessDetails: BusinessDetails;
+  readonly businessDetails?: BusinessDetails;
 
   @IsOptional()
   businessDetailPhoto: Express.Multer.File;

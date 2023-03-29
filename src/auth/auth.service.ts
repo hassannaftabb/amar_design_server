@@ -41,21 +41,20 @@ export class AuthService {
     const user = await this.userService.getUserByPhoneNumber(
       phoneLoginDto.phone,
     );
-    if (!user) {
-      throw new NotFoundException(
-        `User with ${phoneLoginDto.phone} phone number doesn't exist`,
-      );
-    }
-    const passMatch = await bcrypt.compare(
-      phoneLoginDto.password,
-      user.password,
-    );
-    if (user && passMatch === true) {
+    if (user && user.firebaseAccessToken) {
       const payloadForToken = { phone: user.phone, id: user.id };
       const token = this.jwtService.sign(payloadForToken);
-      return { accessToken: token, phone: user.phone, id: user.id };
-    } else {
-      throw new UnauthorizedException('Invalid Credentials');
+      return {
+        accessToken: token,
+        phone: user.phone,
+        id: user.id,
+        isExistingUser: true,
+      };
+    } else if (!user) {
+      return {
+        isExistingUser: false,
+        isEligible: true,
+      };
     }
   }
 
