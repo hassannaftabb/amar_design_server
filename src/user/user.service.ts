@@ -16,7 +16,8 @@ import { Project } from './entities/project.entity';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { CheckEligibilityDto } from './dto/check-eligibility.dto';
 import { ProviderEnum } from './enums/provider.enum';
-
+import { GetQouteDto } from './dto/get-qoute.dto';
+import * as nodemailer from 'nodemailer';
 @Injectable()
 export class UserService {
   constructor(
@@ -145,6 +146,10 @@ export class UserService {
     project: CreateProjectDto,
     projectImages: Array<Express.Multer.File>,
   ): Promise<Project> {
+    const user: User = await this.getUserById(id);
+    if (!user) {
+      throw new InternalServerErrorException('User with this id doesnt exist.');
+    }
     const imgUrls = await Promise.all(
       projectImages.map(async (img: Express.Multer.File) => {
         const bucketKey = `${img.fieldname}${Date.now()}`;
@@ -152,10 +157,7 @@ export class UserService {
         return uploadResponse;
       }),
     );
-    const user: User = await this.getUserById(id);
-    if (!user) {
-      throw new InternalServerErrorException('User with this id doesnt exist.');
-    }
+
     const projectToCreate = {
       projectName: project.projectName,
       projectAddress: project.projectAddress,
@@ -168,5 +170,70 @@ export class UserService {
     const newProject = this.projectRepository.create(projectToCreate);
     const createdProject = await this.projectRepository.save(newProject);
     return createdProject;
+  }
+
+  async getVendorById(id: any): Promise<User> {
+    const existingUser = await this.userRepository.findOne({
+      where: { id: parseInt(id) },
+      relations: ['projects', 'basicInfo', 'businessDetails'],
+    });
+    if (existingUser) {
+      return existingUser;
+    } else {
+      throw new NotFoundException('No user with this ID.');
+    }
+  }
+  async getProfileById(id: any): Promise<User> {
+    const existingUser = await this.userRepository.findOne({
+      where: { id: parseInt(id) },
+      relations: ['projects', 'basicInfo', 'businessDetails'],
+    });
+    if (existingUser) {
+      return existingUser;
+    } else {
+      throw new NotFoundException('No user with this ID.');
+    }
+  }
+  async getProfessionals(): Promise<User[]> {
+    const users = await this.userRepository.find({
+      relations: ['projects', 'basicInfo', 'businessDetails'],
+    });
+    return users;
+  }
+  async sendQouteToProfessionalThroughEmail(getQouteDto: GetQouteDto) {
+    const user = await this.getUserById(getQouteDto.professionalId);
+    if (user) {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'hassannaftabb@gmail.com',
+          pass: 'mnqkfdveytiuwdjy',
+        },
+      });
+
+      const mailOptions = {
+        from: 'hassannaftabb@gmail.com',
+        to: user.email,
+        subject: `${getQouteDto.name}-(${getQouteDto.email}) wants a qoute from you!`,
+        text: getQouteDto.message,
+      };
+
+      await transporter
+        .sendMail(mailOptions)
+        .then(() => {
+          return { success: true, message: 'Quote Sent!' };
+        })
+        .catch((error) => {
+          console.log(error);
+          throw new InternalServerErrorException("Couldn't send email!");
+        });
+
+      // Return success message object
+      return { success: true, message: 'Quote Sent!' };
+    } else {
+      throw new NotFoundException(
+        'There is no professional registred with this email!',
+      );
+    }
   }
 }

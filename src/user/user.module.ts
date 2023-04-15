@@ -8,10 +8,12 @@ import { BusinessDetails } from './entities/user-business-details.entity';
 import { Project } from './entities/project.entity';
 import { S3Module } from 'src/s3/s3.module';
 import { S3Service } from 'src/s3/s3.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     S3Module,
+    ConfigModule.forRoot(),
     TypeOrmModule.forFeature([User, BasicInfo, BusinessDetails, Project]),
   ],
   controllers: [UserController],

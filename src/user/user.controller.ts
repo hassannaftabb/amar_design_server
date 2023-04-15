@@ -7,6 +7,8 @@ import {
   UseInterceptors,
   UploadedFiles,
   Param,
+  Get,
+  UseGuards,
 } from '@nestjs/common';
 import {
   FileFieldsInterceptor,
@@ -17,6 +19,8 @@ import { CreateProjectDto } from './dto/create-project.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Project } from './entities/project.entity';
 import { UserService } from './user.service';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { GetQouteDto } from './dto/get-qoute.dto';
 
 @Controller('user')
 export class UserController {
@@ -60,5 +64,26 @@ export class UserController {
       projectImages,
     );
     return createdProject;
+  }
+
+  @Get('vendor/:userId')
+  async getUserById(@Param('userId') userId: number) {
+    return this.userService.getVendorById(userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('profile/:userId')
+  async getProfileById(@Param('userId') userId: number) {
+    return this.userService.getProfileById(userId);
+  }
+
+  @Get('professionals')
+  async getProfessionals() {
+    return this.userService.getProfessionals();
+  }
+
+  @Post('qoute')
+  async getQouteFromUserWithEmail(@Body() getQouteDto: GetQouteDto) {
+    return this.userService.sendQouteToProfessionalThroughEmail(getQouteDto);
   }
 }

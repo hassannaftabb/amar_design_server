@@ -2,6 +2,7 @@ import { IsEmail } from 'class-validator';
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   OneToMany,
   OneToOne,
@@ -34,17 +35,16 @@ export class User {
 
   @Column({ nullable: true })
   firebaseAccessToken?: string;
-
-  @JoinTable()
   @OneToOne(() => BasicInfo, (info) => info.user, {
     cascade: true,
   })
+  @JoinColumn()
   basicInfo: BasicInfo;
 
-  @JoinTable()
   @OneToOne(() => BusinessDetails, (detail) => detail.user, {
     cascade: true,
   })
+  @JoinColumn()
   businessDetails?: BusinessDetails;
 
   @JoinTable()
