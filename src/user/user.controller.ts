@@ -9,6 +9,7 @@ import {
   Param,
   Get,
   UseGuards,
+  Query,
 } from '@nestjs/common';
 import {
   FileFieldsInterceptor,
@@ -78,8 +79,8 @@ export class UserController {
   }
 
   @Get('professionals')
-  async getProfessionals() {
-    return this.userService.getProfessionals();
+  async getProfessionals(@Query('category') category: string) {
+    return this.userService.getProfessionals(category);
   }
 
   @Post('qoute')

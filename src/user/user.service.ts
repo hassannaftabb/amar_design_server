@@ -194,11 +194,23 @@ export class UserService {
       throw new NotFoundException('No user with this ID.');
     }
   }
-  async getProfessionals(): Promise<User[]> {
-    const users = await this.userRepository.find({
-      relations: ['projects', 'basicInfo', 'businessDetails'],
-    });
-    return users;
+  async getProfessionals(category: string): Promise<User[]> {
+    if (category) {
+      const users = await this.userRepository.find({
+        where: {
+          basicInfo: {
+            category: category,
+          },
+        },
+        relations: ['projects', 'basicInfo', 'businessDetails'],
+      });
+      return users;
+    } else {
+      const users = await this.userRepository.find({
+        relations: ['projects', 'basicInfo', 'businessDetails'],
+      });
+      return users;
+    }
   }
   async sendQouteToProfessionalThroughEmail(getQouteDto: GetQouteDto) {
     const user = await this.getUserById(getQouteDto.professionalId);

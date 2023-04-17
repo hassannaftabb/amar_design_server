@@ -13,7 +13,9 @@ export class AppService {
     return 'Hello World!';
   }
   async getAllProjects(): Promise<Project[]> {
-    const allProjects = await this.projectRepository.find();
+    const allProjects = await this.projectRepository.find({
+      relations: ['user'],
+    });
     return allProjects;
   }
 }
