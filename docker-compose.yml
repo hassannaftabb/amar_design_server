@@ -1,6 +1,22 @@
 version: '3'
 
 services:
+  backend:
+    build: ./
+    container_name: amardesign_server
+    environment:
+      - PORT=8000
+      - S3_REGION=us-east-1
+      - S3_BUCKET=amardesigner
+      - S3_ACCESS_KEY_ID=AKIATGWJ5XK4C2YFQ6UH
+      - S3_SECRET_ACCESS_KEY=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
+      - JWT_SECRET=myJwt9078654@***
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+    networks:
+      - amardesign_network
   db:
     image: postgres
     restart: always
@@ -8,3 +24,9 @@ services:
       - '5432:5432'
     environment:
       POSTGRES_PASSWORD: hardstone349
+    networks:
+      - amardesign_network
+
+networks:
+  amardesign_network:
+    driver: bridge
