@@ -11,6 +11,12 @@ services:
       - S3_ACCESS_KEY_ID=AKIATGWJ5XK4C2YFQ6UH
       - S3_SECRET_ACCESS_KEY=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
       - JWT_SECRET=myJwt9078654@***
+      - DB_HOST=localhost
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=hardstone349
+      - DB_NAME=postgres
+      - DB_SYNCHRONIZE=true
     ports:
       - '8000:8000'
     depends_on:

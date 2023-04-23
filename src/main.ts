@@ -5,11 +5,18 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import * as sqlite from 'better-sqlite3';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as fs from 'fs';
+import * as path from 'path';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const SqliteStore = require('better-sqlite3-session-store')(session);
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    httpsOptions: {
+      key: fs.readFileSync(path.join(__dirname, '..', 'private.key')),
+      cert: fs.readFileSync(path.join(__dirname, '..', 'certificate.crt')),
+    },
+  });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
