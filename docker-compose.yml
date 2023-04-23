@@ -5,7 +5,7 @@ services:
     build: ./
     container_name: amardesign_server
     environment:
-      - PORT=8000
+      - PORT=443
       - S3_REGION=us-east-1
       - S3_BUCKET=amardesigner
       - S3_ACCESS_KEY_ID=AKIATGWJ5XK4C2YFQ6UH
@@ -18,7 +18,9 @@ services:
       - DB_NAME=postgres
       - DB_SYNCHRONIZE=true
     ports:
-      - '8000:8000'
+      # - '8000:8000'
+      # - '8443:8443'
+      - '443:443'
     depends_on:
       - db
     networks:
