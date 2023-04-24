@@ -24,9 +24,6 @@ COPY --from=build /usr/src/app/dist ./dist
 
 COPY package*.json ./
 
-COPY ./private.key /etc/ssl/private/
-COPY ./certificate.crt /etc/ssl/certs/
-
 RUN npm install --only=production
 
 EXPOSE 8000
