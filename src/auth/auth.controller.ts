@@ -5,6 +5,8 @@ import { GoogleAuthDto } from './dto/google.dto';
 import { EmailLoginDto } from './dto/local.dto';
 import { PhoneLoginDto } from './dto/phone.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { AdminAuthGuard } from './admin-auth.guard';
+import { AdminAuthDto } from './dto/admin.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -29,6 +31,16 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('check_auth')
   checkAuth(@Req() req) {
+    return req.user;
+  }
+
+  @Post('admin')
+  adminLogin(@Body() adminAuthDto: AdminAuthDto) {
+    return this.authService.adminAuth(adminAuthDto);
+  }
+  @UseGuards(AdminAuthGuard)
+  @Post('check_admin_auth')
+  checkAdminAuth(@Req() req) {
     return req.user;
   }
 }

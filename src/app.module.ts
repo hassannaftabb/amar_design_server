@@ -6,6 +6,8 @@ import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { Project } from './user/entities/project.entity';
+import { AdminAuthGuard } from './auth/admin-auth.guard';
+import { JwtService } from '@nestjs/jwt';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -24,6 +26,6 @@ import { Project } from './user/entities/project.entity';
     TypeOrmModule.forFeature([Project]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AdminAuthGuard, JwtService],
 })
 export class AppModule {}

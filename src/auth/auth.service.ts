@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { PhoneLoginDto } from './dto/phone.dto';
 import { GoogleAuthDto } from './dto/google.dto';
 import { FacebookAuthDto } from './dto/facebook.dto';
+import { AdminAuthDto } from './dto/admin.dto';
 
 @Injectable()
 export class AuthService {
@@ -100,6 +101,29 @@ export class AuthService {
       throw new UnauthorizedException(
         `There is already a user registered with ${fbAuthDto.email}, and was not registred using Facebook, please try to sign in using your email and password.`,
       );
+    }
+  }
+
+  async adminAuth(adminAuthDto: AdminAuthDto) {
+    const adminEmail = process.env.AMARDESIGNER_ADMIN_EMAIL;
+    const adminPassword = process.env.AMARDESIGNER_ADMIN_PASSWORD;
+    if (
+      adminAuthDto.email === adminEmail &&
+      adminAuthDto.password === adminPassword
+    ) {
+      const payloadForToken = {
+        email: adminEmail,
+        id: 0,
+        password: adminPassword,
+      };
+      const token = this.jwtService.sign(payloadForToken);
+      return {
+        accessToken: token,
+        email: adminEmail,
+        id: 0,
+      };
+    } else {
+      throw new UnauthorizedException('Invalid Admin Credentials!');
     }
   }
 }
