@@ -25,6 +25,7 @@ async function bootstrap() {
       'https://amar-design.vercel.app',
       'http://localhost:5173',
       'https://amardesigner.com',
+      'https://amar-design-admin.vercel.app/',
     ],
   });
   app.use(passport.initialize());
