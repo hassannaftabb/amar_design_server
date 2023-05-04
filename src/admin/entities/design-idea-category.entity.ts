@@ -1,5 +1,13 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { DesignIdeaProject } from './design-idea-project,entity';
 
+@Entity()
 export class DesignIdeaCategory {
   @PrimaryGeneratedColumn()
   id: number;
@@ -7,4 +15,7 @@ export class DesignIdeaCategory {
   title: string;
   @Column()
   image: string;
+  @JoinTable()
+  @OneToMany(() => DesignIdeaProject, (project) => project.category)
+  projects?: DesignIdeaProject[];
 }

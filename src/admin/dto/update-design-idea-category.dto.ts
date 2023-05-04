@@ -1,4 +1,7 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateAdminDto } from './create-design-idea-category.dto';
+import { IsString } from 'class-validator';
 
-export class UpdateAdminDto extends PartialType(CreateAdminDto) {}
+export class UpdateDesignIdeaCategoryDto {
+  @IsString()
+  title: string;
+  image?: any;
+}

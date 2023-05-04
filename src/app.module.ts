@@ -8,11 +8,13 @@ import { AuthModule } from './auth/auth.module';
 import { Project } from './user/entities/project.entity';
 import { AdminAuthGuard } from './auth/admin-auth.guard';
 import { JwtService } from '@nestjs/jwt';
+import { AdminModule } from './admin/admin.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
     UserModule,
     AuthModule,
+    AdminModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
